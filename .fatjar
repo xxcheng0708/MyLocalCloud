@@ -1,0 +1,14 @@
+#Fat Jar Configuration File
+#Fri Jun 05 07:57:50 CST 2015
+onejar.license.required=true
+manifest.classpath=
+manifest.removesigners=true
+onejar.checkbox=false
+jarname=cloud.jar
+manifest.mergeall=true
+manifest.mainclass=com.test.ui.Start
+manifest.file=<createnew>
+jarname.isextern=false
+onejar.expand=
+excludes=
+includes=

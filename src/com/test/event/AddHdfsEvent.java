@@ -6,7 +6,6 @@ import java.io.IOException;
 import javax.swing.JOptionPane;
 import org.json.JSONException;
 import org.json.JSONObject;
-import com.test.model.ApiTest;
 import com.test.tools.Tools;
 import com.test.ui.AddHdfsNode;
 /**

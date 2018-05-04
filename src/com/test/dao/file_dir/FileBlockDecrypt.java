@@ -141,7 +141,7 @@ public class FileBlockDecrypt {
     /**
      * 解密文件
      * @param file 文件地址
-     * @param destFile 加密后文件的存放地址
+     * @param destFile 解密后文件的存放地址
      * @throws Exception
      */
     public void decrypt(String file ,String destFile) throws Exception {  

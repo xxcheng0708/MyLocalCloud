@@ -87,7 +87,7 @@ public class FileSeperate {
 		return this.file.length() ;
 	}
 	/**
-	 * 计算文件块数（网盘个数）
+	 * 计算文件块数
 	 */
 	public int getFileBlockNum() {
 		int count = 0;
@@ -247,7 +247,7 @@ public class FileSeperate {
 		    System.out.println("文件分块完成");
 		    return true;
 		}else {
-			JOptionPane.showMessageDialog(null, "请添加网盘！！！", "上传提示", 1);
+			JOptionPane.showMessageDialog(null, "请添加HDFS节点！！！", "上传提示", 1);
 			return false ;
 		}
 		

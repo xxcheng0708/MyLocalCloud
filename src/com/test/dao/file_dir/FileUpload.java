@@ -78,10 +78,34 @@ public class FileUpload extends HdfsTools implements Runnable{
     	// 获取加密目录下的所有加密文件块，并逐个上传
     	File file = new File(fileBlockPath) ;
     	File[] fileList = file.listFiles() ;
+    	
+    	// 保存待上传的文件名称到数组中
+    	String[] fileNameList = new String[fileList.length];
     	for(int i = 0 ; i < fileList.length ; i ++) {
-    		this.uploadFile2Hdfs(fileList[i].getAbsolutePath(), dstPath) ;
+    		fileNameList[i] = fileList[i].getName() ;
     	}
-    	this.fileManager.updateTempUploadFileState(tempfileId,"完成") ;
+    	
+    	try {
+    		// 逐个上传文件块
+        	for(int i = 0 ; i < fileList.length ; i ++) {
+        		this.uploadFile2Hdfs(fileList[i].getAbsolutePath(), dstPath) ;
+        	}
+        	this.fileManager.updateTempUploadFileState(tempfileId,"完成") ;
+    	}catch(IOException e) {
+    		// 上传出错,删除HDFS文件系统中的文件块，避免造成脏数据
+    		this.fileManager.updateTempUploadFileState(tempfileId,"失败") ;
+    		HdfsTools hdfsTool = new HdfsTools() ;
+    		for(int i = 0 ; i < fileNameList.length ; i ++) {
+    			try {
+					hdfsTool.deleteHdfsFile("/" + fileNameList[i]) ;
+				} catch (IOException e1) {
+					// TODO 自动生成的 catch 块
+					e1.printStackTrace();
+				}
+    		}
+    		throw new IOException("文件上传异常！！！") ;
+//    		System.out.println();
+    	}
     	// 文件上传成功
     	return true ;
 	}
@@ -262,7 +286,6 @@ public class FileUpload extends HdfsTools implements Runnable{
 								JOptionPane.showMessageDialog(null, "创建文件上传成功！", "信息提示", 1);
 							}
 						} catch (Exception e) {
-							this.fileManager.updateTempUploadFileState(tempfileId,"失败") ;
 							JOptionPane.showMessageDialog(null, "网络异常！！！请检查网络连接。", "信息提示", 1);
 							e.printStackTrace() ;
 						}

@@ -16,6 +16,7 @@ import com.test.dao.file_dir.DownloadTableManager;
 import com.test.dao.file_dir.FileManager;
 import com.test.dao.file_dir.FileUpload;
 import com.test.dao.file_dir.UploadTableManager;
+import com.test.thread.HdfsNodesListThread;
 import com.test.tools.Tools;
 import com.test.ui.AddHdfsNode;
 import com.test.ui.ChangePassword;
@@ -58,22 +59,7 @@ public class LoginSuccessEvent extends MouseAdapter implements ActionListener , 
 		 * 显示用户的HDFS节点列表
 		 */
 		if(e.getSource() == Tools.loginSuccess.myHdfsNode) {
-//			try {
-//				if(Tools.loginSuccess.hdfs.refreshHdfsNodes()){					
-//				}
-//				else{
-//				}
-//			} catch (Exception e1) {
-//				// TODO Auto-generated catch block
-//				e1.printStackTrace();
-//			}
-			
-			try {
-				Tools.loginSuccess.hdfs.showHdfsNodes() ;
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
+			new Thread(new HdfsNodesListThread()).start() ;
 		}
 		
 		/**

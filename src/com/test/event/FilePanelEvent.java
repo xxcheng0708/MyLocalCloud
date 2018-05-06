@@ -173,7 +173,7 @@ public class FilePanelEvent extends MouseAdapter implements ActionListener,KeyLi
 				int parentId = Tools.parentIdStack.lastElement() ;
 				
 				/**
-				 * 文件删除（解决卡顿的问题）
+				 * 文件删除（解决卡顿的问题）,使用线程池
 				 */
 				FileDelete fileDeleteManager = new FileDelete(filename , parentId) ;
 				FutureTask<Boolean> task = new FutureTask<Boolean>(fileDeleteManager) ;

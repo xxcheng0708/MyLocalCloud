@@ -145,27 +145,30 @@ public class HadoopHDFS {
 //		}
 		
 		DatanodeInfo[] dataNodeStats = hdfsTool.getDataNodeList() ;
-		for(int i = 0 ; i < dataNodeStats.length ; i ++) {
-			System.out.println("DataNode_"+i+"_Name:"+dataNodeStats[i].getHostName());
-			System.out.println(dataNodeStats[i].getBlockPoolUsed());
-			System.out.println(dataNodeStats[i].getBlockPoolUsedPercent());
-			System.out.println(dataNodeStats[i].getCapacity() / (1024*1024));
-			System.out.println(dataNodeStats[i].getDfsUsed() / (1024*1024));
-			System.out.println(dataNodeStats[i].getDfsUsedPercent());
-			String ipAddr = dataNodeStats[i].getIpAddr() ;
-			String hostName = dataNodeStats[i].getHostName();
-			String dfsUsed = (long)(dataNodeStats[i].getDfsUsed() / (1024*1024)) + " M" ;
-			String dfsCapacity = (long)(dataNodeStats[i].getCapacity() / (1024*1024)) + " M" ;
-			String dfsPercent = dataNodeStats[i].getDfsUsedPercent() + " %";
-			String nodeType = "DataNode" ;
-			Tools.loginSuccess.hdfsNodesTable.setValueAt(ipAddr, i, 0) ;
-			Tools.loginSuccess.hdfsNodesTable.setValueAt(hostName, i, 1) ;
-			Tools.loginSuccess.hdfsNodesTable.setValueAt(dfsUsed, i, 2) ;
-			Tools.loginSuccess.hdfsNodesTable.setValueAt(dfsCapacity, i, 3) ;
-			Tools.loginSuccess.hdfsNodesTable.setValueAt(dfsPercent, i, 4) ;
-			Tools.loginSuccess.hdfsNodesTable.setValueAt(nodeType, i, 5) ;
+		if(dataNodeStats != null) {
+			for(int i = 0 ; i < dataNodeStats.length ; i ++) {
+				System.out.println("DataNode_"+i+"_Name:"+dataNodeStats[i].getHostName());
+				System.out.println(dataNodeStats[i].getBlockPoolUsed());
+				System.out.println(dataNodeStats[i].getBlockPoolUsedPercent());
+				System.out.println(dataNodeStats[i].getCapacity() / (1024*1024));
+				System.out.println(dataNodeStats[i].getDfsUsed() / (1024*1024));
+				System.out.println(dataNodeStats[i].getDfsUsedPercent());
+				String ipAddr = dataNodeStats[i].getIpAddr() ;
+				String hostName = dataNodeStats[i].getHostName();
+				String dfsUsed = (long)(dataNodeStats[i].getDfsUsed() / (1024*1024)) + " M" ;
+				String dfsCapacity = (long)(dataNodeStats[i].getCapacity() / (1024*1024)) + " M" ;
+				String dfsPercent = dataNodeStats[i].getDfsUsedPercent() + " %";
+				String nodeType = "DataNode" ;
+				Tools.loginSuccess.hdfsNodesTable.setValueAt(ipAddr, i, 0) ;
+				Tools.loginSuccess.hdfsNodesTable.setValueAt(hostName, i, 1) ;
+				Tools.loginSuccess.hdfsNodesTable.setValueAt(dfsUsed, i, 2) ;
+				Tools.loginSuccess.hdfsNodesTable.setValueAt(dfsCapacity, i, 3) ;
+				Tools.loginSuccess.hdfsNodesTable.setValueAt(dfsPercent, i, 4) ;
+				Tools.loginSuccess.hdfsNodesTable.setValueAt(nodeType, i, 5) ;
+			}
+			return true ;
 		}
-		return true ;
+		return false ;
 	}
 
 /**

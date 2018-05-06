@@ -1,6 +1,7 @@
 package com.test.dao.file_dir;
 
 import java.io.IOException ;
+import java.net.ConnectException;
 import java.net.URI ;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -9,6 +10,8 @@ import java.sql.SQLException;
 import java.util.ArrayList ;
 import java.util.List ;
 import java.io.File ;
+
+import javax.swing.JOptionPane;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
@@ -49,7 +52,7 @@ public class HdfsTools {
 	
 	public String getHdfsUri() {
 		String hdfsIp = "" ;
-		String queryHdfsNodeIp = "select hdfs_ip from hdfs where u_id = ?" ;
+		String queryHdfsNodeIp = "select hdfs_ip from hdfs where u_id = ? " ;
 		
 		try {
 			// 数据库操作
@@ -263,11 +266,17 @@ public class HdfsTools {
 	 * @throws IOException
 	 */
 	public DatanodeInfo[] getDataNodeList() throws IOException {
-		Configuration conf=new Configuration();
-		FileSystem fs=FileSystem.get(URI.create(hdfsUri) ,conf);
-		DistributedFileSystem hdfs = (DistributedFileSystem)fs;
-		DatanodeInfo[] dataNodeStats = hdfs.getDataNodeStats();
-		return dataNodeStats ;
+		try {
+			Configuration conf=new Configuration();
+			FileSystem fs=FileSystem.get(URI.create(hdfsUri) ,conf);
+			DistributedFileSystem hdfs = (DistributedFileSystem)fs;
+			DatanodeInfo[] dataNodeStats = hdfs.getDataNodeStats();
+			return dataNodeStats ;
+		}catch(ConnectException e) {
+			JOptionPane.showMessageDialog(null, "HDFS集群连接异常！！！请检查HDFS状态", "信息提示", 1);
+			e.printStackTrace() ;
+		}
+		return null ;
 	}
 	
 	/*

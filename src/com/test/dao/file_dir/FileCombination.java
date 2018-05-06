@@ -4,8 +4,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.StringTokenizer;
+
+import com.test.db.DBManage;
 /**
  * 文件块合并类
  * @author asus
@@ -18,28 +24,51 @@ public class FileCombination {
 	String[][] separatedFilesAndSize;//存放所有拆分文件名及分件大小
 	int fileBlockNum=0;//确定文件个数
 	String fileRealName="";//据拆分文件名确定现在原文件名
+	private int fileId = -1 ; // 下载的文件ID号
 	// 空的午餐构造方法
-	public FileCombination() {
-		
-	}
+//	public FileCombination() {
+//		
+//	}
 	/**
 	 * @param saveDictionary
+	 * @throws Exception 
 	 * 				
 	 */
-	public FileCombination(String saveDictionary)
+	public FileCombination(String saveDictionary , int fileId) throws Exception
 	{
 		this.saveDictionary = saveDictionary ;
+		this.fileId = fileId ;
 		getFileAttribute() ;
 		combinationFile() ;
 	}
 	/**
-	 *分析文件块，得到文件名
+	 *根据文件ID查询数据库得到文件名
+	 * @throws Exception 
 	 */
-    private String getRealName(String fileName)
+//    private String getRealName(String fileName)
+//    {
+//    	StringTokenizer st = new StringTokenizer(fileName , ".");
+//    	System.out.println("传入的参数 filename :" + fileName);
+//    	System.out.println("获取文件真实名称 : " + st.nextToken()+"."+st.nextToken());
+//    	return st.nextToken()+"."+st.nextToken();
+//    }
+    
+    private String getRealName() throws Exception
     {
-    	StringTokenizer st = new StringTokenizer(fileName , ".");
-    	return st.nextToken()+"."+st.nextToken();
+    	String getFileName = "select f_name from file where f_id = ?" ;
+    	DBManage dbManage = new DBManage() ;
+    	Connection connection = dbManage.getConnection() ;
+    	PreparedStatement preparedStatement = dbManage.getPreparedStatement(getFileName) ;
+    	preparedStatement.setInt(1, this.fileId) ;
+    	ResultSet resultSet = preparedStatement.executeQuery() ;
+    	if(resultSet.next()) {
+//    		System.out.println("获取文件真实名称 ： " + resultSet.getString("f_name"));
+    		return resultSet.getString("f_name") ;
+    	}
+    	return "null" ;
+    	
     }
+    
     /**
      * 获取文件大小
      */
@@ -51,8 +80,9 @@ public class FileCombination {
     /**
      * 生成一些属性，做初使化
      * @param drictory 拆分文件目录
+     * @throws Exception 
      */
-    private void getFileAttribute()
+    private void getFileAttribute() throws Exception
     {
     	//定位到saveDictionary目录下
     	File file=new File(this.saveDictionary);
@@ -71,7 +101,7 @@ public class FileCombination {
     		separatedFilesAndSize[i][0]=separatedFiles[i];//文件名
     		separatedFilesAndSize[i][1]=String.valueOf(getFileSize(separatedFiles[i]));//文件大上
     	}
-    	fileRealName=getRealName(separatedFiles[fileBlockNum-1]);//取得文件分隔前的原文件名
+    	fileRealName=getRealName();//取得文件分隔前的原文件名
     }
     /**
      * 合并文件：利用随机文件读写

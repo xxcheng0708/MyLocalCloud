@@ -5,6 +5,7 @@ import java.awt.event.MouseEvent;
 
 import com.test.dao.file_dir.FileManager;
 import com.test.thread.DownloadListTableThread;
+import com.test.thread.HdfsNodesListThread;
 import com.test.thread.UploadListTableThread;
 import com.test.tools.Tools;
 import com.test.ui.FindPassword;
@@ -49,7 +50,8 @@ public class LoginEvent extends MouseAdapter {
 						new Thread(new UploadListTableThread(Tools.loginSuccess)).start() ;
 						new Thread(new DownloadListTableThread(Tools.loginSuccess)).start() ;
 						// 显示HDFS节点信息
-						Tools.loginSuccess.hdfs.showHdfsNodes() ;
+						new Thread(new HdfsNodesListThread()).start() ;
+//						Tools.loginSuccess.hdfs.showHdfsNodes() ;
 					}
 				}
 			}catch(Exception ee) {

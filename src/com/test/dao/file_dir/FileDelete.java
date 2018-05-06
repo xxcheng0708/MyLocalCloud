@@ -1,5 +1,6 @@
 package com.test.dao.file_dir;
 
+import java.net.ConnectException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +8,8 @@ import java.sql.SQLException;
 import java.util.Stack;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
+
+import javax.swing.JOptionPane;
 
 import com.test.db.DBManage;
 import com.test.tools.Tools;
@@ -36,8 +39,9 @@ public class FileDelete implements Callable<Boolean>{
 	 * 删除文件或者文件夹
 	 * filename是文件名
 	 * parentId是被删除的文件的父节点ID
+	 * @throws ConnectException 
 	 */
-	public boolean delete(String filename , int parentId) {
+	public boolean delete(String filename , int parentId) throws ConnectException {
 		String filetype = "";
 		int fileId = -1 ;
 		/**
@@ -66,6 +70,7 @@ public class FileDelete implements Callable<Boolean>{
 				this.resultSet = this.preparedStatement.executeQuery() ;
 				while(this.resultSet.next()) {
 					String fileBlockName = this.resultSet.getString("b_name") ;
+					System.out.println("删除文件块 ： " + fileBlockName);
 					this.hdfsTool.deleteHdfsFile("/" + fileBlockName) ;
 					
 					// 删除数据库文件记录
@@ -81,11 +86,13 @@ public class FileDelete implements Callable<Boolean>{
 					querySubFile() ;
 				}
 			}
-		} catch (Exception e) {
+		}catch(ConnectException e ) {
+			throw new ConnectException("HDFS集群连接失败") ;
+		}catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false ;
-		} finally {
+		}finally {
 			// 关闭连接
 			if(this.resultSet != null) {
 				try {
@@ -195,11 +202,17 @@ public class FileDelete implements Callable<Boolean>{
 		}
 	}
 
-
 	@Override
 	public Boolean call() {
 		// TODO Auto-generated method stub
-		return delete(fileName , parentId) ;
+		try {
+			return delete(fileName , parentId) ;
+		}catch (ConnectException e) {
+			// TODO: handle exception
+//			JOptionPane.showMessageDialog(null, "HDFS集群连接异常！！！请检查HDFS状态", "信息提示", 1);
+			e.printStackTrace() ;
+			return false ;
+		}
 	}
 	
 

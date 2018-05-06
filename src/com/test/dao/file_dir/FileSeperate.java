@@ -119,7 +119,12 @@ public class FileSeperate {
 			}
 			this.dbmanage.closeLink() ;
 		}
-		return count ;
+//		if(new File(this.fileDictionary).length() > (1024 * 1024))
+//			return 3 ;
+//		else 
+//			return 1 ;
+		return 3 ;
+//		return count ;
 	}
 	
 	/**
@@ -162,9 +167,60 @@ public class FileSeperate {
 	/**
 	 * 文件分块写操作
 	 */
-	  public boolean writeFile(String fileDictionary ,String fileBlockName,long fileBlockSize[],long beginPos)//往硬盘写文件
+//	  public boolean writeFile(String fileDictionary ,String fileBlockName,long fileBlockSize[],long beginPos)//往硬盘写文件
+//	  {
+//	    RandomAccessFile raf=null;
+//	    FileOutputStream fos=null;
+//	    byte[] bt=new byte[1024];
+//	    long writeByte=0;
+//	    int len=0;
+//	    try
+//	    {
+//	      raf = new RandomAccessFile(fileDictionary,"r");
+//	      raf.seek(beginPos);
+//	      fos = new FileOutputStream(fileBlockName);
+//	      for(int i = 0 ; i< fileBlockSize.length ; i ++) {
+//		      while((len=raf.read(bt))>0)
+//		      {       
+//		        if(writeByte<fileBlockSize[i])//如果当前块还没有写满
+//		        {
+//		          writeByte=writeByte+len;
+//		          if(writeByte<=fileBlockSize[i])
+//		            fos.write(bt,0,len);
+//		          else
+//		          {
+//		            len=len-(int)(writeByte-fileBlockSize[i]);
+//		            fos.write(bt,0,len);
+//		          }
+//		        }       
+//		      }
+//	      }
+//
+//
+//	      fos.close();
+//	      raf.close();
+//	    }
+//	    catch (Exception e)
+//	    {
+//	      e.printStackTrace();
+//	      try
+//	      {
+//	        if(fos!=null)
+//	          fos.close();
+//	        if(raf!=null)
+//	          raf.close();
+//	      }
+//	      catch(Exception f)
+//	      {
+//	        f.printStackTrace();
+//	      }
+//	      return false;
+//	    }
+//	    return true;
+//	  }
+	  
+	  public boolean writeFile(String fileDictionary ,String fileBlockName,long fileBlockSize,long beginPos)//往硬盘写文件
 	  {
-	 
 	    RandomAccessFile raf=null;
 	    FileOutputStream fos=null;
 	    byte[] bt=new byte[1024];
@@ -175,23 +231,20 @@ public class FileSeperate {
 	      raf = new RandomAccessFile(fileDictionary,"r");
 	      raf.seek(beginPos);
 	      fos = new FileOutputStream(fileBlockName);
-	      for(int i = 0 ; i< fileBlockSize.length ; i ++) {
-		      while((len=raf.read(bt))>0)
-		      {       
-		        if(writeByte<fileBlockSize[i])//如果当前块还没有写满
-		        {
-		          writeByte=writeByte+len;
-		          if(writeByte<=fileBlockSize[i])
-		            fos.write(bt,0,len);
-		          else
-		          {
-		            len=len-(int)(writeByte-fileBlockSize[i]);
-		            fos.write(bt,0,len);
-		          }
-		        }       
-		      }
+	      while(writeByte < fileBlockSize && (len=raf.read(bt))>0)
+	      {       
+	        if(writeByte<fileBlockSize)//如果当前块还没有写满
+	        {
+	          writeByte=writeByte+len;
+	          if(writeByte<=fileBlockSize)
+	            fos.write(bt,0,len);
+	          else
+	          {
+	            len=len-(int)(writeByte-fileBlockSize);
+	            fos.write(bt,0,len);
+	          }
+	        }       
 	      }
-
 
 	      fos.close();
 	      raf.close();
@@ -215,6 +268,7 @@ public class FileSeperate {
 	    return true;
 	  }
 	
+	  
 	/**
 	 * 文件分块
 	 */
@@ -237,7 +291,7 @@ public class FileSeperate {
 		    	  FileCurrentNameAndPath = this.savePath + "//"+foldername+"//" + this.fileName + ".part" ;	      
 		      else
 		        FileCurrentNameAndPath=getFileBlockName(i) ;
-		      if(!writeFile(this.fileDictionary , FileCurrentNameAndPath , fileBlockSizes , writeTotal))//循环往硬盘写文件
+		      if(!writeFile(this.fileDictionary , FileCurrentNameAndPath , fileBlockSizes[i] , writeTotal))//循环往硬盘写文件
 		      {
 		    	  System.out.println("文件分块失败");
 		    	  return false;

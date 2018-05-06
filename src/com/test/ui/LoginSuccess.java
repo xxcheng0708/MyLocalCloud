@@ -165,8 +165,8 @@ public class LoginSuccess extends JFrame {
 		addHdfsNode = new JLabel("添加HDFS集群") ;
 		myHdfsNode = new JLabel("HDFS节点列表") ;
 		this.fileManager.fileSeperate = new FileSeperate() ;
-		hdfsModel = new DefaultTableModel(colnames,this.fileManager.fileSeperate.getFileBlockNum()); 
-		System.out.println("HDFS节点个数：" + this.fileManager.fileSeperate.getFileBlockNum());
+		hdfsModel = new DefaultTableModel(colnames,1); 
+//		System.out.println("HDFS节点个数：" + this.fileManager.fileSeperate.getFileBlockNum());
 		hdfsNodesTable = new JTable(hdfsModel){
 			public boolean isCellEditable(int row , int column) {
 				return false ;

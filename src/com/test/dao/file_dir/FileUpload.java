@@ -285,7 +285,10 @@ public class FileUpload extends HdfsTools implements Runnable{
 								// 文件上传成功
 								JOptionPane.showMessageDialog(null, "创建文件上传成功！", "信息提示", 1);
 							}
-						} catch (Exception e) {
+						}catch(java.net.ConnectException e ) {
+							JOptionPane.showMessageDialog(null, "HDFS集群连接异常！！！请检查HDFS状态", "信息提示", 1);
+							e.printStackTrace() ;
+						}catch (Exception e) {
 							JOptionPane.showMessageDialog(null, "网络异常！！！请检查网络连接。", "信息提示", 1);
 							e.printStackTrace() ;
 						}

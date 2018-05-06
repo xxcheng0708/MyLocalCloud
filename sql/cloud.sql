@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50517
 File Encoding         : 65001
 
-Date: 2018-05-01 20:05:21
+Date: 2018-05-06 18:52:41
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -30,7 +30,7 @@ CREATE TABLE `file` (
   PRIMARY KEY (`f_id`),
   KEY `user_file_id` (`u_id`),
   CONSTRAINT `user_file_id` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for fileblock
@@ -38,10 +38,10 @@ CREATE TABLE `file` (
 DROP TABLE IF EXISTS `fileblock`;
 CREATE TABLE `fileblock` (
   `f_id` int(11) NOT NULL,
-  `b_name` varchar(80) NOT NULL,
+  `b_name` varchar(80) CHARACTER SET utf8 NOT NULL,
   `b_covername` varchar(80) CHARACTER SET utf8 NOT NULL,
   `f_key` varchar(80) CHARACTER SET utf8 NOT NULL,
-  PRIMARY KEY (`f_id`),
+  KEY `file_fileblock_id` (`f_id`),
   CONSTRAINT `file_fileblock_id` FOREIGN KEY (`f_id`) REFERENCES `file` (`f_id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -74,7 +74,7 @@ CREATE TABLE `temp_download_file` (
   PRIMARY KEY (`tf_id`),
   KEY `user_tmp_download_id` (`u_id`),
   CONSTRAINT `user_tmp_download_id` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=53 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for temp_upload_file
@@ -92,7 +92,7 @@ CREATE TABLE `temp_upload_file` (
   PRIMARY KEY (`tf_id`),
   KEY `user_tmp_id` (`u_id`),
   CONSTRAINT `user_tmp_id` FOREIGN KEY (`u_id`) REFERENCES `user` (`u_id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=77 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=63 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Table structure for user
